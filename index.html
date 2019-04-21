@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>矩阵测试-移动</title>
+</head>
+
+<body>
+	<canvas id="can" width="600" height="600">
+
+	</canvas>
+    <script type="text/javascript" language="javascript">
+    	var can = document.getElementById("can");
+    	var context = can.getContext("2d");
+		var width = can.width, height = can.height;
+		/*
+		function KeyHome() {
+			this.keys = new Set();
+			//判断按键是否存在
+			containKeys: function( k1, k2 ) {
+				if ( !k1 && !k2) {
+					return false;
+				} else if ( !k2 ) { // k2不存在
+					return this.keys.has(k1);
+				} else {
+					return this.keys.has(k1) && this.keys.has(k2);
+				}
+			};
+			
+		};*/
+		var moveMatrix = [
+				[1, 0, 1],
+				[0, 1, 1],
+				[0, 0, 1]
+			];
+		var radius = 10;
+		var position = [ 
+			[
+			[width/2 - 100, height/2 - 100, 1],[width/2, height/2  - 100, 1], [width/2 + 100, height/2  - 100, 1]
+			],
+			[
+			[width/2 - 50, height/2, 1],[width/2 + 50, height/2, 1]
+			],
+			[
+				[width/2 , height/2 + 100, 1]
+			],
+		 ];
+		 
+		 function drawPoint() {
+			setInterval(function() {
+				move();
+				context.clearRect(0,0,width,height);
+				for ( var i = 0; i < position.length; i++ ) {
+					for ( var j = 0; j < position.length - i; j++ ) {
+						context.beginPath();
+						context.fillStyle = "#AAA";
+						context.arc(position[i][j][0],position[i][j][1],		radius, 0, 2*Math.PI);
+						context.stroke();
+						context.fill();
+						context.closePath();
+					}
+				}
+			}, 50);
+		 }
+		 // 移动函数
+		 function move() {
+				for ( var i = 0; i < position.length; i++ ) {
+					for ( var j = 0; j < position.length - i; j++ ) {
+						position[i][j][0] = moveMatrix[0][0]* position[i][j][0] + moveMatrix[0][2]*position[i][j][2];
+						position[i][j][1] = moveMatrix[1][1]* position[i][j][1] + moveMatrix[1][2]*position[i][j][2];	
+					}
+				}
+		 }
+		 /**
+		 *@param xOffset x方向偏移
+		 *@param yOffset y方向偏移
+		 */
+		 function changeDirection(xOffset, yoffset) {
+		 	moveMatrix[0][2] = xOffset;
+			moveMatrix[1][2] = yoffset;
+		 }
+		 function listenerInput() {
+			window.onkeydown = function( event ) {
+				console.log( event );
+				switch( event.key ) {
+					case 'w':
+						changeDirection(0,-1);
+						break;
+					case 'a':
+						changeDirection(-1,0);
+						break;
+					case 's':
+						changeDirection(0,1);
+						break;
+					case 'd':
+						changeDirection(1,0);
+						break;
+				}
+			}	 
+		 }
+		 
+		 window.onload = function() {
+		 	drawPoint();
+			listenerInput();
+		 }
+    </script>
+</body>
+</html>
